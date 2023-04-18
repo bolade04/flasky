@@ -49,9 +49,5 @@ stage('Kubernetes') {
         }
       }
     }
-<<<<<<< HEAD
   }
 }
-=======
-}
->>>>>>> refs/remotes/origin/main
