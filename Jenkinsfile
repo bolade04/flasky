@@ -1,9 +1,9 @@
 pipeline {
     environment {
-        registry = 'valeriedarling/flask_app'
+        registry = 'bolade4/flask_app'
         registryCredentials = 'docker'
         cluster_name = 'skillstorm'
-        namespace = 'valeriedarling'
+        namespace = 'mikeb'
     }
   agent {
     node {
@@ -14,7 +14,7 @@ pipeline {
   stages {
     stage('Git') {
       steps {
-        git(url: 'https://github.com/valeriedarling/flasky', branch: 'main')
+        git(url: 'https://github.com/bolade04/flasky', branch: 'main')
       }
     }
 stage('Build Stage') {
