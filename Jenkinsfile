@@ -1,4 +1,10 @@
 pipeline {
+  environment {
+      registry = 'bolade4/flask_app'
+      registryCredentials = 'docker'
+      cluster_name = 'skillstorm'
+      namespace = 'mikeb'
+  }
   agent {
     node {
       label 'docker'
