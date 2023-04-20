@@ -22,7 +22,7 @@ spec:
     spec: 
       containers: 
       - name:  flaskcontainer 
-        image:  bolade4/flask_app 
+        image:  bolade4/try-app 
         resources:
           requests:
             cpu: 100m
