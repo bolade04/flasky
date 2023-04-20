@@ -1,10 +1,4 @@
 pipeline {
-    environment {
-        registry = 'bolade4/flask_app'
-        registryCredentials = 'docker'
-        cluster_name = 'skillstorm'
-        namespace = 'mikeb'
-    }
   agent {
     node {
       label 'docker'
@@ -17,37 +11,51 @@ pipeline {
         git(url: 'https://github.com/bolade04/flasky', branch: 'main')
       }
     }
-stage('Build Stage') {
-    steps {
+
+    stage('Build Stage') {
+      steps {
         script {
-            dockerImage = docker.build(registry)
+          dockerImage = docker.build(registry)
         }
+
       }
     }
-stage('Deploy Stage') {
-    steps {
+
+    stage('Deploy Stage') {
+      steps {
         script {
-           docker.withRegistry('', registryCredentials) {
-                dockerImage.push()
-            }
+          docker.withRegistry('', registryCredentials) {
+            dockerImage.push()
           }
         }
-      }
-stage('Kubernetes') {
-  steps {
-    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId:'AWS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-      sh "aws eks update-kubeconfig --region us-east-1 --name ${cluster_name}"
-      script{
-        try{
-          sh "kubectl create namespace ${namespace}"
-        }catch (Exception e) {
-            echo "Exception handled"
-        }
-        }
-        sh "kubectl apply -f deployment.yaml -n ${namespace}"
-        sh "kubectl -n ${namespace} rollout restart deployment flaskcontainer"
-        }
+
       }
     }
+
+    stage('Kubernetes') {
+      steps {
+        withCredentials(bindings: [aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId:'AWS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+          sh "aws eks update-kubeconfig --region us-east-1 --name ${cluster_name}"
+          script {
+            try{
+              sh "kubectl create namespace ${namespace}"
+            }catch (Exception e) {
+              echo "Exception handled"
+            }
+          }
+
+          sh "kubectl apply -f deployment.yaml -n ${namespace}"
+          sh "kubectl -n ${namespace} rollout restart deployment flaskcontainer"
+        }
+
+      }
+    }
+
+  }
+  environment {
+    registry = 'bolade4/flask_app'
+    registryCredentials = 'docker'
+    cluster_name = 'skillstorm'
+    namespace = 'mikeb'
   }
 }
