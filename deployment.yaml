@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  flaskcontainer
-  namespace: valeriedarling
+  namespace: mikeb
   labels: 
     app:  flaskcontainer 
 spec: 
@@ -22,7 +22,7 @@ spec:
     spec: 
       containers: 
       - name:  flaskcontainer 
-        image:  valeriedarling/flask_app 
+        image:  bolade4/flask_app 
         resources:
           requests:
             cpu: 100m
@@ -41,7 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: flaskcontainer
-  namespace: valeriedarling
+  namespace: mikeb
 spec:
   selector:
     app: flaskcontainer
